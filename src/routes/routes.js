@@ -35,16 +35,26 @@ routes.post("/send-video", auth, async (req, res) => {
 });
 
 routes.post("/webhook", webhookAuth, buildWebhookRequest, async (req, res) => {
-  const message = req.body;
-  try {
-    videoServerQueue.add(message);
+  const { command } = req.body;
+
+  if (command === "download-video") {
+    delete req.body.command;
+
+    videoServerQueue.add(req.body);
     console.log(
       `✅ Job succesfully added to queue: ${process.env.MESSAGE_QUEUE}`
     );
     return res.sendStatus(200);
-  } catch (err) {
-    console.log(err);
   }
+
+  if (command === "invalid-command") {
+    const { message } = req.body;
+
+    await sendText(message);
+    return res.sendStatus(200);
+  }
+
+  return res.sendStatus(404);
 });
 
 export default routes;
