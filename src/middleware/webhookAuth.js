@@ -7,6 +7,7 @@ const webhookAuth = async (req, res, next) => {
     req.body.phone != process.env.PHONE ||
     req.body.instanceId != process.env.INSTANCE_ID
   ) {
+    console.log("Unauthorized");
     return res.status(403).json({
       message: "Unauthorized",
     });
