@@ -4,9 +4,12 @@ import sendVideo from "../services/sendVideo.js";
 import auth from "../middleware/auth.js";
 import phoneCheck from "../middleware/phoneCheck.js";
 import queueConnection from "../infra/queueConnection.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const routes = Router();
-const videoServerQueue = queueConnection("videoserver");
+const videoServerQueue = queueConnection(process.env.MESSAGE_QUEUE);
 
 routes.post("/send-text", auth, async (req, res) => {
   const { text } = req.body;
