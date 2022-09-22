@@ -2,7 +2,8 @@ import { Router } from "express";
 import sendText from "../services/sendText.js";
 import sendVideo from "../services/sendVideo.js";
 import auth from "../middleware/auth.js";
-import phoneCheck from "../middleware/phoneCheck.js";
+import webhookAuth from "../middleware/webhookAuth.js";
+import buildWebhookRequest from "../middleware/buildWebhookRequest.js";
 import queueConnection from "../infra/queueConnection.js";
 import dotenv from "dotenv";
 
@@ -33,11 +34,13 @@ routes.post("/send-video", auth, async (req, res) => {
   }
 });
 
-routes.post("/webhook", phoneCheck, async (req, res) => {
-  const message = req.body.text;
+routes.post("/webhook", webhookAuth, buildWebhookRequest, async (req, res) => {
+  const message = req.body;
   try {
     videoServerQueue.add(message);
-    console.log("Job added to queue!");
+    console.log(
+      `✅ Job succesfully added to queue: ${process.env.MESSAGE_QUEUE}`
+    );
     return res.sendStatus(200);
   } catch (err) {
     console.log(err);
