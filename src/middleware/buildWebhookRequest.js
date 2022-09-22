@@ -3,8 +3,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const buildWebhookRequest = async (req, res, next) => {
-  console.log(req.body);
-
   const { message } = req.body.text;
   const command = message.split(" ")[0];
 
