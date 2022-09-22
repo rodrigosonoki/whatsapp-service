@@ -12,7 +12,8 @@
   },
   "type": "module",
   "scripts": {
-    "start": "nodemon ./src/index"
+    "start": "node ./src/index",
+    "dev": "nodemon ./src/index"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"
